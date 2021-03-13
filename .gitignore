@@ -16,3 +16,6 @@ tests/**/coverage/
 *.ntvs*
 *.njsproj
 *.sln
+
+# Editor directories and files
+workspace.code-workspace

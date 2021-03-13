@@ -12,8 +12,15 @@ function registerRoutes(app) {
   const mocksForServer = mocks.map(route => {
     return responseFake(route.url, route.type, route.response)
   })
+
+  // 解决测试跨域问题 1-4
+  // mock-server express 中间件body-parser 导致，表现为不带参数请求没有问题
   for (const mock of mocksForServer) {
-    app[mock.type](mock.url, mock.response)
+    // app[mock.type](mock.url, mock.response)
+    app[mock.type](mock.url, bodyParser.json(), bodyParser.urlencoded({
+      extended: true
+    }), mock.response)
+
     mockLastIndex = app._router.stack.length
   }
   const mockRoutesLength = Object.keys(mocksForServer).length
@@ -46,10 +53,12 @@ const responseFake = (url, type, respond) => {
 module.exports = app => {
   // parse app.body
   // https://expressjs.com/en/4x/api.html#req.body
-  app.use(bodyParser.json())
-  app.use(bodyParser.urlencoded({
-    extended: true
-  }))
+
+  // 解决测试跨域问题 1-4
+  // app.use(bodyParser.json())
+  // app.use(bodyParser.urlencoded({
+  //   extended: true
+  // }))
 
   const mockRoutes = registerRoutes(app)
   var mockRoutesLength = mockRoutes.mockRoutesLength

@@ -3,6 +3,8 @@ import { MessageBox, Message } from 'element-ui'
 import store from '@/store'
 import { getToken } from '@/utils/auth'
 
+// axios : 发送请求用
+// 自己实例化一个 service(便于自定义后缀什么的), 使用了 axios 来发送请求
 // create an axios instance
 const service = axios.create({
   baseURL: process.env.VUE_APP_BASE_API, // url = base url + request url

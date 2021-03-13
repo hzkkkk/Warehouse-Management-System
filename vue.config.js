@@ -29,6 +29,7 @@ module.exports = {
   assetsDir: 'static',
   lintOnSave: process.env.NODE_ENV === 'development',
   productionSourceMap: false,
+
   devServer: {
     port: port,
     open: true,
@@ -36,7 +37,25 @@ module.exports = {
       warnings: false,
       errors: true
     },
-    before: require('./mock/mock-server.js')
+
+    // 两种实现方法：本地Mock-server 或者外网 Mock-sercer(需要跨域)
+    // 先本地拦截，如果不行再跨域请求
+    before: require('./mock/mock-server.js'),
+    // 解决跨域问题 1-1
+    // 添加测试：开发环境代理配置。 （因为开发环境都有 /dev-api 前缀，需要用pathRewrite 去掉）
+    proxy: {
+      [process.env.VUE_APP_BASE_API]: { // 是.env.development 文件的'/dev-api':
+        // 目标服务器地址
+        target: 'https://mock.mengxuegu.com/mock/604b23bff340b05bceda3fc5/wms-admin',
+        changeOrigin: true, // 开启代理
+        //  将 /dev-api/test 中的 /dev-api' 替换为 ''
+        pathRewrite: {
+          // '^/dev-api': '',
+          // '^' 
+          ['^' + process.env.VUE_APP_BASE_API]: ''
+        }
+      }
+    }
   },
   configureWebpack: {
     // provide the app's title in webpack's name field, so that
@@ -87,7 +106,7 @@ module.exports = {
             .plugin('ScriptExtHtmlWebpackPlugin')
             .after('html')
             .use('script-ext-html-webpack-plugin', [{
-            // `runtime` must same as runtimeChunk name. default is `runtime`
+              // `runtime` must same as runtimeChunk name. default is `runtime`
               inline: /runtime\..*\.js$/
             }])
             .end()
