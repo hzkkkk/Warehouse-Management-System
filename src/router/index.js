@@ -4,6 +4,7 @@ import Router from 'vue-router'
 Vue.use(Router)
 
 /* Layout */
+// 引用组件
 import Layout from '@/layout'
 
 /**
@@ -30,10 +31,13 @@ import Layout from '@/layout'
  * a base page that does not have permission requirements
  * all roles can be accessed
  */
+
+// 通用的路由配置，匿名非匿名用户
 export const constantRoutes = [
   {
     path: '/login',
     component: () => import('@/views/login/index'),
+    // 隐藏登录组件
     hidden: true
   },
 
@@ -51,122 +55,106 @@ export const constantRoutes = [
       path: 'dashboard',
       name: 'Dashboard',
       component: () => import('@/views/dashboard/index'),
-      meta: { title: 'Dashboard', icon: 'dashboard' }
+      meta: { title: '首页', icon: 'dashboard' }
     }]
   },
 
+  // 物资管理
   {
-    path: '/example',
+    path: '/wms',
     component: Layout,
-    redirect: '/example/table',
-    name: 'Example',
-    meta: { title: 'Example', icon: 'el-icon-s-help' },
+    redirect: '/wms/goodsManager',
+    name: 'Wms',
+    meta: { title: '物资管理', icon: 'example' },
     children: [
       {
-        path: 'table',
-        name: 'Table',
-        component: () => import('@/views/table/index'),
-        meta: { title: 'Table', icon: 'table' }
+        path: 'goodsManager',
+        name: 'GoodsManager',
+        component: () => import('@/views/goodsManager/index'),
+        meta: { title: '物资详情管理', icon: 'table' }
       },
       {
-        path: 'tree',
-        name: 'Tree',
-        component: () => import('@/views/tree/index'),
-        meta: { title: 'Tree', icon: 'tree' }
+        path: 'outportManager',
+        name: 'OutportManager',
+        component: () => import('@/views/outportManager/index'),
+        meta: { title: '物资详情管理', icon: 'el-icon-caret-top' }
+      },
+      {
+        path: 'inportManager',
+        name: 'InportManager',
+        component: () => import('@/views/inportManager/index'),
+        meta: { title: '物资入库', icon: 'el-icon-caret-bottom' }
       }
     ]
   },
 
+  // 仓库管理
   {
-    path: '/form',
+    path: '/warehouseManager',
     component: Layout,
     children: [
       {
         path: 'index',
-        name: 'Form',
-        component: () => import('@/views/form/index'),
-        meta: { title: 'Form', icon: 'form' }
+        name: 'WarehouseManager',
+        component: () => import('@/views/warehouseManager/index'),
+        meta: { title: '仓库管理', icon: 'el-icon-s-home' }
       }
     ]
   },
 
+  // 系统管理
   {
-    path: '/nested',
+    path: '/system',
     component: Layout,
-    redirect: '/nested/menu1',
-    name: 'Nested',
-    meta: {
-      title: 'Nested',
-      icon: 'nested'
-    },
+    redirect: '/system/user',
+    name: 'Syste,',
+    meta: { title: '系统管理', icon: 'el-icon-setting' },
     children: [
       {
-        path: 'menu1',
-        component: () => import('@/views/nested/menu1/index'), // Parent router-view
-        name: 'Menu1',
-        meta: { title: 'Menu1' },
-        children: [
-          {
-            path: 'menu1-1',
-            component: () => import('@/views/nested/menu1/menu1-1'),
-            name: 'Menu1-1',
-            meta: { title: 'Menu1-1' }
-          },
-          {
-            path: 'menu1-2',
-            component: () => import('@/views/nested/menu1/menu1-2'),
-            name: 'Menu1-2',
-            meta: { title: 'Menu1-2' },
-            children: [
-              {
-                path: 'menu1-2-1',
-                component: () => import('@/views/nested/menu1/menu1-2/menu1-2-1'),
-                name: 'Menu1-2-1',
-                meta: { title: 'Menu1-2-1' }
-              },
-              {
-                path: 'menu1-2-2',
-                component: () => import('@/views/nested/menu1/menu1-2/menu1-2-2'),
-                name: 'Menu1-2-2',
-                meta: { title: 'Menu1-2-2' }
-              }
-            ]
-          },
-          {
-            path: 'menu1-3',
-            component: () => import('@/views/nested/menu1/menu1-3'),
-            name: 'Menu1-3',
-            meta: { title: 'Menu1-3' }
-          }
-        ]
+        path: 'user',
+        name: 'User',
+        component: () => import('@/views/user/index'),
+        meta: { title: '用户管理', icon: 'el-icon-user-solid' }
       },
       {
-        path: 'menu2',
-        component: () => import('@/views/nested/menu2/index'),
-        name: 'Menu2',
-        meta: { title: 'menu2' }
+        path: 'role',
+        name: 'Role',
+        component: () => import('@/views/role/index'),
+        meta: { title: '角色管理', icon: 'el-icon-coin' }
+      },
+      {
+        path: 'menu',
+        name: 'Menu',
+        component: () => import('@/views/menu/index'),
+        meta: { title: '菜单管理', icon: 'el-icon-menu' }
       }
     ]
   },
 
+  // 跳转外网
   {
-    path: 'external-link',
+    path: 'my-own-site',
     component: Layout,
     children: [
       {
-        path: 'https://panjiachen.github.io/vue-element-admin-site/#/',
-        meta: { title: 'External Link', icon: 'link' }
+        path: 'https://bug-hunter.baklib-free.com/',
+        meta: { title: 'BUG-Hunter 的个人网站', icon: 'link' }
       }
     ]
   },
 
+  // 放在最后面是因为其他匹配完，没有之后再去重定向/404
   // 404 page must be placed at the end !!!
   { path: '*', redirect: '/404', hidden: true }
 ]
 
 const createRouter = () => new Router({
-  // mode: 'history', // require service support
+  // 历史路由，需不需要加 #
+  mode: 'history', // require service support
   scrollBehavior: () => ({ y: 0 }),
+
+  // 脚手架自动根据配置生成左侧菜单的链路
+  // 2: 获取路由表，存到 routes
   routes: constantRoutes
 })
 

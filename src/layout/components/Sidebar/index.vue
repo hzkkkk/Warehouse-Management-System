@@ -12,6 +12,8 @@
         :collapse-transition="false"
         mode="vertical"
       >
+        <!-- 脚手架自动根据配置生成左侧菜单的链路 -->
+        <!-- 3: 子组件SidebarItem from './SidebarItem'，用于遍历显示路由 -->
         <sidebar-item v-for="route in routes" :key="route.path" :item="route" :base-path="route.path" />
       </el-menu>
     </el-scrollbar>
@@ -30,6 +32,8 @@ export default {
     ...mapGetters([
       'sidebar'
     ]),
+    // 脚手架自动根据配置生成左侧菜单的链路
+    // 2: 获取路由表，存到 routes
     routes() {
       return this.$router.options.routes
     },

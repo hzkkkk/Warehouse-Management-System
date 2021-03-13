@@ -2,6 +2,7 @@
   <div class="navbar">
     <hamburger :is-active="sidebar.opened" class="hamburger-container" @toggleClick="toggleSideBar" />
 
+    <!-- 左侧渲染区域 -->
     <breadcrumb class="breadcrumb-container" />
 
     <div class="right-menu">
@@ -12,6 +13,7 @@
         </div>
         <el-dropdown-menu slot="dropdown" class="user-dropdown">
           <router-link to="/">
+            <!-- 右侧渲染区域 -->
             <el-dropdown-item>
               Home
             </el-dropdown-item>
