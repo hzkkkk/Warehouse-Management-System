@@ -132,10 +132,12 @@ export default {
     },
     refreshSelectedTag(view) {
       this.$store.dispatch('tagsView/delCachedView', view).then(() => {
+        // fullPath: 路由地址 /wms/goodsManager
         const { fullPath } = view
+        // consolo.log('fullpath',fullPath)
         this.$nextTick(() => {
           this.$router.replace({
-            path: '/redirect' + fullPath
+            path: '/redirect' + fullPath // /redirect/wms/goodsManager
           })
         })
       })

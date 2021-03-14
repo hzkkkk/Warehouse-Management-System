@@ -10,6 +10,7 @@
 // 引入 api
 import api from '@/api/test'
 export default {
+  name: 'Dashboard',
   data() {
     return {
       name: {}

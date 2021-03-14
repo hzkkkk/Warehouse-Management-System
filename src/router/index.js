@@ -77,7 +77,7 @@ export const constantRoutes = [
         path: 'outportManager',
         name: 'OutportManager',
         component: () => import('@/views/outportManager/index'),
-        meta: { title: '物资详情管理', icon: 'el-icon-caret-top' }
+        meta: { title: '物资出库', icon: 'el-icon-caret-top' }
       },
       {
         path: 'inportManager',
@@ -139,6 +139,19 @@ export const constantRoutes = [
       {
         path: 'https://bug-hunter.baklib-free.com/',
         meta: { title: 'BUG-Hunter 的个人网站', icon: 'link' }
+      }
+    ]
+  },
+
+  // 配置 标签导航 刷新路由
+  {
+    path: '/redirect',
+    component: Layout,
+    hidden: true,
+    children: [
+      {
+        path: '/redirect/:path(.*)',
+        component: () => import('@/views/redirect/index')
       }
     ]
   },
