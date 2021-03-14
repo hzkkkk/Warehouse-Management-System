@@ -1,11 +1,122 @@
 <template>
-  <div>
-    物资详情管理
+  <div class="app-container">
+    <!-- 数据列表 :data 绑定渲染的数据, border 纵向边框 -->
+    <el-table
+      :data="list"
+      border
+      highlight-current-row
+      style="width: 100%"
+    >
+      <!-- type="index"获取索引值（官方给的），从1开始 ，label显示标题，prop 数据字段名，width列宽 -->
+      <el-table-column align="center" type="index" label="序号" width="60" />
+      <el-table-column align="center" prop="name" label="分类名称" />
+      <el-table-column align="center" prop="sort" label="排序" />
+      <el-table-column align="center" prop="remark" label="备注" />
+      <!-- <el-table-column align="center" prop="status" label="状态" width="160" /> -->
+
+      <el-table-column align="center" prop="status" label="状态">
+        <template slot-scope="scope">
+          <el-tag :type="scope.row.status | statusFilter">
+            {{ scope.row.status ? '正常':'禁用' }}
+          </el-tag>
+        </template>
+      </el-table-column>
+
+      <el-table-column align="center" label="操作">
+        <template slot-scope="scope">
+          <el-button
+            size="mini"
+            @click="handleEdit(scope.row.id)"
+          >编辑</el-button>
+          <el-button
+            size="mini"
+            type="danger"
+            @click="handleDelete(scope.row.id)"
+          >删除</el-button>
+        </template>
+      </el-table-column>
+    </el-table>
+
+    <!-- current-change 触发 handleCurrentChange方法  -->
+    <!-- size-change 触发 handleSizeChange  -->
+    <el-pagination
+      :current-page="page.current"
+      :page-sizes="[10, 20, 50]"
+      :page-size="page.size"
+      :total="page.total"
+      layout="total, sizes, prev, pager, next, jumper"
+      @size-change="handleSizeChange"
+      @current-change="handleCurrentChange"
+    />
+
   </div>
 </template>
-
 <script>
+
+// 方法2 ：非默认对象 import {getList, XXXXXX } from '@/api/goodsManager'
+import api from '@/api/goodsManager'
 export default {
-  name: 'InportManager'
+  name: 'GoodsManager',
+
+  // 状态码转名称
+  // 1. 定义 statusFilter 过滤器转换样式
+  filters: {
+    statusFilter(status) {
+      // 样式
+      const statusMap = { 0: 'danger', 1: 'success' }
+      // status等于0返回danger, 1返回success
+      // ES6 语法，匹配 key 值
+      return statusMap[status]
+    }
+  },
+
+  data() {
+    return {
+      list: [], // 真实查询的数据
+      page: { // 分页对象
+        total: 0, // 总记录数
+        current: 1, // 当前页码
+        size: 20 // 每页显示20条数据,
+      },
+      query: {} // 查询条件
+    }
+  },
+
+  // 钩子函数获取数据
+  created() {
+    this.fetchData()
+  },
+  methods: {
+    fetchData() {
+      // Promise 语法 Promise.then(response =>{})
+      api.getList(this.query, this.page.current, this.page.size).then(response => {
+        // console.log(response) 能看到真实数据在 response.data.records
+        // 传递真实数据到 list
+        this.list = response.data.records
+        this.page.total = response.data.total
+      })
+    },
+
+    // 当每页显示条数改变后,被触发 , val是最新的每页显示条数
+    handleSizeChange(val) {
+      this.page.size = val
+      this.fetchData()
+    },
+    // 当页码改变后,被触发 , val 是最新的页面
+    handleCurrentChange(val) {
+      this.page.current = val
+      this.fetchData()
+    },
+
+    // TODO: unfinished
+    handleEdit(id) {
+      console.log('编辑', id)
+    },
+    handleDelete(id) {
+      console.log('删除', id)
+    }
+
+  }
 }
 </script>
+
