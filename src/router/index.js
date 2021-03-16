@@ -63,7 +63,7 @@ export const constantRoutes = [
   {
     path: '/wms',
     component: Layout,
-    redirect: '/wms/categoryManager',
+    redirect: '/wms/goodsManager',
     name: 'Wms',
     meta: { title: '物资管理', icon: 'example' },
     children: [
@@ -72,6 +72,12 @@ export const constantRoutes = [
         name: 'CategoryManager',
         component: () => import('@/views/categoryManager/index'),
         meta: { title: '物资种类管理', icon: 'table' }
+      },
+      {
+        path: 'goodsManager',
+        name: 'GoodsManager',
+        component: () => import('@/views/goodsManager/index'),
+        meta: { title: '物资详情管理', icon: 'el-icon-s-order' }
       },
       {
         path: 'providerManager',
