@@ -53,7 +53,7 @@
 </template>
 
 <script>
-import api from '@/api/goodsManager'
+import api from '@/api/categoryManager'
 
 export default {
 // props : 接收父组件传递的属性
@@ -101,7 +101,7 @@ export default {
       this.remoteClose()
     },
 
-    // 1. Api 调用接口，在 @/api/goodsManager.js
+    // 1. Api 调用接口，在 @/api/categoryManager.js
     // 2. 提交表单
     submitForm(formName) {
       this.$refs[formName].validate((valid) => {

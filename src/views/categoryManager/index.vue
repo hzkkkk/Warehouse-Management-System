@@ -86,8 +86,8 @@
 </template>
 <script>
 
-// 方法2 ：非默认对象 import {getList, XXXXXX } from '@/api/goodsManager'
-import api from '@/api/goodsManager'
+// 方法2 ：非默认对象 import {getList, XXXXXX } from '@/api/categoryManager'
+import api from '@/api/categoryManager'
 
 import Edit from './edit'
 
@@ -98,7 +98,7 @@ const statusOptions = [
 ]
 
 export default {
-  name: 'GoodsManager',
+  name: 'CategoryManager',
 
   components: { Edit },
 

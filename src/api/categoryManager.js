@@ -4,7 +4,7 @@ export default {
 // 分页条件查询分类列表
   getList(query, current = 1, size = 20) {
     return request({ // Promise
-      url: `/wms/goodsManager/search`,
+      url: `/wms/categoryManager/search`,
       method: 'post',
       data: { // {name: '前端', status: 1, current: current, size: size}
         ...query,
@@ -17,7 +17,7 @@ export default {
   // 新增：交表单
   add(data) {
     return request({
-      url: `/wms/goodsManager`,
+      url: `/wms/categoryManager`,
       method: 'post',
       data
     })
@@ -26,7 +26,7 @@ export default {
   // 修改：查询
   getById(id) {
     return request({
-      url: `/wms/goodsManager/${id}`, // 反单引号 ``
+      url: `/wms/categoryManager/${id}`, // 反单引号 ``
       method: 'get'
     })
   },
@@ -34,7 +34,7 @@ export default {
   // 修改：更新
   update(data) {
     return request({
-      url: `/wms/goodsManager`,
+      url: `/wms/categoryManager`,
       method: 'put', // put 方式提交
       data
     })
@@ -42,7 +42,7 @@ export default {
   // 删除
   deleteById(id) {
     return request({
-      url: `/wms/goodsManager/${id}`, // 反单引号 ``
+      url: `/wms/categoryManager/${id}`, // 反单引号 ``
       method: 'delete' // delete 方式提交
     })
   }
