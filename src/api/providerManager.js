@@ -8,5 +8,12 @@ export default {
       method: 'post',
       data: { ...query, current, size } // 合并成一个对象
     })
+  },
+  add(data) {
+    return request({
+      url: `/wms/providerManager/`,
+      method: 'post',
+      data
+    })
   }
 }

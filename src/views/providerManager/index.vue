@@ -21,7 +21,7 @@
       <el-form-item>
         <el-button icon="el-icon-search" type="primary" @click="queryData">查询</el-button>
         <el-button icon="el-icon-refresh" class="filter-item" @click="reload">重置</el-button>
-        <el-button type="primary" size="mini" icon="el-icon-circle-plus-outline">新增</el-button>
+        <el-button type="primary" size="mini" icon="el-icon-circle-plus-outline" @click="openAdd">新增</el-button>
       </el-form-item>
     </el-form>
 
@@ -63,17 +63,28 @@
       @current-change="handleCurrentChange"
     />
 
+    <!-- 新增与修改组件 -->
+    <edit
+      :category-list="categoryList"
+      :title="edit.title"
+      :visible="edit.visible"
+      :form-data="edit.formData"
+      :remote-close="remoteClose"
+    />
+
   </div>
 </template>
 
 <script>
 import api from '@/api/providerManager'
+import Edit from './edit'
 
 // 1. 导入
 import categoryApi from '@/api/categoryManager'
 
 export default {
   name: 'ProviderManager', // 和对应路由表中配置的name值一致
+  components: { Edit },
   data() {
     return {
       list: [],
@@ -83,7 +94,12 @@ export default {
         size: 20 // 每页显示20条数据,
       },
       query: {}, // 查询条件
-      categoryList: [] // 2. 数组存储正常状态的分类
+      categoryList: [], // 2. 数组存储正常状态的分类
+      edit: { // 子组件中引用
+        title: '',
+        visible: false,
+        formData: {}
+      }
     }
   },
   // 钩子函数获取数据
@@ -133,6 +149,20 @@ export default {
     // 重置 or 刷新当前页面
     reload() {
       this.query = {}
+      this.fetchData()
+    },
+    // 打开新增窗口
+    openAdd() {
+      // 打开时，重新查询正常状态的分类数据
+      this.getCategoryList()
+      this.edit.visible = true
+      this.edit.title = '新增'
+    },
+    // 触发关闭弹出的新增修改子组件窗口
+    remoteClose() {
+      // 一定要加上这个，不然有时候表单输入不了值
+      this.edit.formData = {}
+      this.edit.visible = false
       this.fetchData()
     }
   }
