@@ -1,6 +1,7 @@
 <template>
   <!--弹窗-->
   <el-dialog
+    :rules="rules"
     :title="title"
     :visible.sync="visible"
     :before-close="handleClose"
@@ -88,7 +89,16 @@ export default {
       this.$refs['formData'].resetFields()
       // 因为 visible 是父组件的属性，所以要让父组件去改变值
       this.remoteClose()
-    },  
+    },
+    data() {
+      return {
+        rules: { // 校验规则
+          type: [{ required: true, message: '请选择类型', trigger: 'change' }],
+          name: [{ required: true, message: '请输入菜单名称', trigger: 'blur' }],
+          code: [{ required: true, message: '请输入权限标识', trigger: 'blur' }]
+        }
+      }
+    },
     // 提交表单
     submitForm(formName) {
     }
