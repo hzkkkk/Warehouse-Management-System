@@ -45,6 +45,14 @@ export default {
       url: `/wms/categoryManager/${id}`, // 反单引号 ``
       method: 'delete' // delete 方式提交
     })
+  },
+
+  // 供应商：获取所有正常状态的物资分类
+  getNormalList() {
+    return request({
+      url: `/wms/categoryManager/list`,
+      method: 'get'
+    })
   }
 
 }

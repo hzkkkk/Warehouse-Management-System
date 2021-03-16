@@ -74,6 +74,12 @@ export const constantRoutes = [
         meta: { title: '物资种类管理', icon: 'table' }
       },
       {
+        path: 'providerManager',
+        name: 'ProviderManager',
+        component: () => import('@/views/providerManager/index'),
+        meta: { title: '物资供应商管理', icon: 'el-icon-s-shop' }
+      },
+      {
         path: 'outportManager',
         name: 'OutportManager',
         component: () => import('@/views/outportManager/index'),
