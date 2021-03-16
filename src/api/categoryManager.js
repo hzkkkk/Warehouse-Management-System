@@ -53,6 +53,13 @@ export default {
       url: `/wms/categoryManager/list`,
       method: 'get'
     })
+  },
+  // 获取所有正常状态的分类和标签
+  getCategoryAndLabel() {
+    return request({
+      url: `/wms/category/provider/list`,
+      method: 'get'
+    })
   }
 
 }

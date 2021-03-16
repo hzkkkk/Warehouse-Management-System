@@ -79,15 +79,38 @@
       </el-table-column>
     </el-table>
 
+    <!-- 分页 -->
+    <el-pagination
+      :current-page="page.current"
+      :page-sizes="[10, 20, 50]"
+      :page-size="page.size"
+      :total="page.total"
+      layout="total, sizes, prev, pager, next, jumper"
+      @size-change="handleSizeChange"
+      @current-change="handleCurrentChange"
+    />
+
+    <!-- 新增与修改组件 -->
+    <audit
+      :id="audit.id"
+      :is-audit="audit.isAudit"
+      :title="audit.title"
+      :visible="audit.visible"
+      :remote-close="remoteClose"
+    />
+
   </div>
 </template>
 
 <script>
 import api from '@/api/goodsManager'
 import { format } from '@/utils/date'
+import Audit from './audit'
 
 export default {
   name: 'GoodsManager', // 和对应路由表中配置的name值一致
+  components: { Audit },
+
   data() {
     return {
       list: [],
@@ -95,6 +118,12 @@ export default {
         total: 0, // 总记录数
         current: 1, // 当前页码
         size: 20 // 每页显示20条数据,
+      },
+      audit: { // 子组件中引用
+        id: null, // 文章id
+        isAudit: true, // true 审核，false 详情
+        visible: false,
+        title: ''
       },
       query: {} // 查询条件
     }
@@ -116,9 +145,14 @@ export default {
       return format(date)
     },
 
+    // 打开审核窗口
     openAudit(id) {
-      console.log('审核', id)
+      this.audit.id = id // 文章id
+      this.audit.isAudit = true // 是审核页面
+      this.audit.title = '审核文章'
+      this.audit.visible = true
     },
+
     handleDelete(id) {
       console.log('删除', id)
     },
@@ -143,8 +177,13 @@ export default {
     reload() {
       this.query = {}
       this.fetchData()
-    }
+    },
 
+    // 用于关闭子组件弹出窗口
+    remoteClose() {
+      this.audit.visible = false
+      this.fetchData()
+    }
   }
 }
 </script>
