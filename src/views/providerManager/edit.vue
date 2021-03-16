@@ -105,7 +105,15 @@ export default {
 
     // 3. 异步方法提交数据
     async submitData() {
-      const response = await api.add(this.formData)
+      // const response = await api.add(this.formData)
+      let response = null
+      // 有 id 值则修改，没有id则新增
+      if (this.formData.id) {
+        response = await api.update(this.formData)
+      } else {
+        response = await api.add(this.formData)
+      }
+
       // 等上面返回数据response后再进行处理
       if (response.code === 20000) {
         // 提交成功, 关闭窗口, 刷新列表

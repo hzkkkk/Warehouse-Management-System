@@ -116,7 +116,15 @@ export default {
       })
     },
     handleEdit(id) {
-      console.log('编辑', id)
+      // console.log('编辑', id)
+      api.getById(id).then(response => {
+        if (response.code === 20000) {
+          this.edit.formData = response.data
+          // 弹出窗口
+          this.edit.visible = true
+          this.edit.title = '编辑'
+        }
+      })
     },
     handleDelete(id) {
       console.log('删除', id)
