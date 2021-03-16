@@ -105,11 +105,39 @@ export default {
       this.edit.visible = true
       this.edit.title = '新增'
     },
+
+    // 编辑菜单
     handleEdit(id) {
-      console.log('编辑', id)
+      api.getById(id).then(response => {
+        if (response.code === 20000) {
+          this.edit.formData = response.data
+          // 设置标题
+          this.edit.title = '编辑'
+          this.edit.visible = true
+        }
+      })
     },
+
+    // 删除
     handleDelete(id) {
-      console.log('删除', id)
+      this.$confirm('确认删除当前节点与子节点记录吗？', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(() => {
+        // 确认
+        api.deleteById(id).then(response => {
+          // 提示信息
+          this.$message({
+            type: response.code === 20000 ? 'success' : 'error',
+            message: response.message
+          })
+          // 刷新列表
+          this.fetchData()
+        })
+      }).catch(() => {
+        // 取消删除，不理会
+      })
     },
     // 重置 or 刷新当前页面
     reload() {
