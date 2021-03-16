@@ -30,6 +30,13 @@ export default {
       url: `/wms/goodsManager/audit/fali/${id}`, // 反单引号 ``
       method: 'get'
     })
+  },
+
+  deleteById(id) {
+    return request({
+      url: `/wms/goodsManager/${id}`, // 反单引号 ``
+      method: 'delete' // delete 方式提交
+    })
   }
 }
 
