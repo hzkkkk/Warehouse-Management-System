@@ -129,19 +129,8 @@ export default {
         title: '',
         visible: false,
         formData: {}
-      },
-
-      rules: { // 校验规则
-        name: [ // 与 el-form-item 标签的 prop 属性值对应
-          { required: true, message: '请输入分类名称', trigger: 'blur' }
-        ],
-        status: [
-          { required: true, message: '请选择状态', trigger: 'change' }
-        ],
-        sort: [
-          { required: true, message: '请输入排序号', trigger: 'change' }
-        ]
       }
+
     }
   },
 
@@ -173,7 +162,15 @@ export default {
 
     // TODO: unfinished
     handleEdit(id) {
-      console.log('编辑', id)
+      // 通过id查询详情
+      api.getById(id).then(response => {
+        if (response.code === 20000) {
+          // 将查询的详情传递
+          this.edit.formData = response.data
+          this.edit.title = '编辑'
+          this.edit.visible = true
+        }
+      })
     },
     handleDelete(id) {
       console.log('删除', id)

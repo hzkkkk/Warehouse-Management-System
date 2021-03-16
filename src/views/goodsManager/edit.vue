@@ -53,6 +53,8 @@
 </template>
 
 <script>
+import api from '@/api/goodsManager'
+
 export default {
 // props : 接收父组件传递的属性
   props: {
@@ -73,6 +75,22 @@ export default {
     remoteClose: Function // 用于关闭窗口
 
   },
+  data() {
+    return {
+      rules: { // 校验规则
+        name: [ // 与 el-form-item 标签的 prop 属性值对应
+          { required: true, message: '请输入分类名称', trigger: 'blur' }
+        ],
+        status: [
+          { required: true, message: '请选择状态', trigger: 'change' }
+        ],
+        sort: [
+          { required: true, message: '请输入排序号', trigger: 'change' }
+        ]
+      }
+    }
+  },
+
   methods: {
     // 关闭弹窗
     handleClose(done) {
@@ -82,17 +100,49 @@ export default {
       // 因为 visible 是父组件的属性，所以要让父组件去改变值
       this.remoteClose()
     },
-    // 提交表单
+
+    // 1. Api 调用接口，在 @/api/goodsManager.js
+    // 2. 提交表单
     submitForm(formName) {
       this.$refs[formName].validate((valid) => {
         if (valid) {
-          alert('submit!')
+          // 校验通过
+          this.submitData()
         } else {
-          console.log('error submit!!')
+          // 校验不通过
           return false
         }
       })
+    },
+
+    // 3. 异步方法提交数据
+    async submitData() {
+      // const response = await api.add(this.formData)
+      let response = null
+      // // 有 id 值则修改，没有id则新增
+      if (this.formData.id) {
+        response = await api.update(this.formData)
+      } else {
+        response = await api.add(this.formData)
+      }
+
+      // 等上面返回数据response后再进行处理
+      if (response.code === 20000) {
+        // 提交成功, 关闭窗口, 刷新列表
+        this.$message({
+          message: '保存成功',
+          type: 'success'
+        })
+        // 关闭窗口
+        this.handleClose()
+      } else {
+        this.$message({
+          type: 'error',
+          message: '保存失败'
+        })
+      }
     }
+
   }
 }
 </script>

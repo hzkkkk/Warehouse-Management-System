@@ -12,5 +12,32 @@ export default {
         size // size : size
       }
     })
+  },
+
+  // 新增：交表单
+  add(data) {
+    return request({
+      url: `/wms/goodsManager`,
+      method: 'post',
+      data
+    })
+  },
+
+  // 修改：查询
+  getById(id) {
+    return request({
+      url: `/wms/goodsManager/${id}`, // 反单引号 ``
+      method: 'get'
+    })
+  },
+
+  // 修改：更新
+  update(data) {
+    return request({
+      url: `/wms/goodsManager`,
+      method: 'put', // put 方式提交
+      data
+    })
   }
+
 }
