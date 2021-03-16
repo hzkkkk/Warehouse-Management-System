@@ -61,16 +61,32 @@
       </el-table-column>
     </el-table>
 
+    <!-- 新增与编辑组件 -->
+    <edit
+      :title="edit.title"
+      :visible="edit.visible"
+      :form-data="edit.formData"
+      :remote-close="remoteClose"
+    />
+
   </div>
 </template>
 
 <script>
 import api from '@/api/menu'
+import Edit from './edit'
+
 export default {
+  components: { Edit },
   data() {
     return {
       query: {}, // 查询条件
-      list: [] // 列表数据
+      list: [], // 列表数据
+      edit: { // 子组件中引用
+        title: '',
+        visible: false,
+        formData: {}
+      }
     }
   },
   created() {
@@ -83,8 +99,12 @@ export default {
         // console.log(this.list)
       })
     },
+    // 打开新增窗口
     handleAdd(id) {
-      console.log('新增', id)
+      // id=0 是新增一级菜单，其他值是新增到此id下的作为子菜单
+      this.edit.formData.parentId = id
+      this.edit.visible = true
+      this.edit.title = '新增'
     },
     handleEdit(id) {
       console.log('编辑', id)
@@ -95,6 +115,12 @@ export default {
     // 重置 or 刷新当前页面
     reload() {
       this.query = {}
+      this.fetchData()
+    },
+    // 触发关闭弹出的新增修改子组件窗口
+    remoteClose() {
+      this.edit.formData = {}
+      this.edit.visible = false
       this.fetchData()
     }
   }
