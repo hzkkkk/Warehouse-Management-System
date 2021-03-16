@@ -1,5 +1,30 @@
 <template>
   <div class="app-container">
+
+    <!-- 条件查询 -->
+    <el-form :inline="true" :model="query" size="mini">
+      <el-form-item label="分类名称:">
+        <el-input v-model.trim="query.name" />
+      </el-form-item>
+      <el-form-item label="状态:">
+        <!-- clearable 清空按钮，filterable 是否可搜索 -->
+        <el-select v-model="query.status" clearable filterable style="width: 85px">
+          <el-option
+            v-for="item in statusOptions"
+            :key="item.code"
+            :label="item.name"
+            :value="item.code"
+          />
+        </el-select>
+      </el-form-item>
+      <el-form-item>
+        <el-button icon="el-icon-search" type="primary" @click="queryData">查询</el-button>
+        <el-button icon="el-icon-refresh" class="filter-item" @click="reload">重置</el-button>
+        <el-button type="primary" size="mini" icon="el-icon-circle-plus-outline" @click="openAdd">新增</el-button>
+      </el-form-item>
+    </el-form>
+
+    <!-- 渲染列表  -->
     <!-- 数据列表 :data 绑定渲染的数据, border 纵向边框 -->
     <el-table
       :data="list"
@@ -37,6 +62,7 @@
       </el-table-column>
     </el-table>
 
+    <!-- 分页组件 -->
     <!-- current-change 触发 handleCurrentChange方法  -->
     <!-- size-change 触发 handleSizeChange  -->
     <el-pagination
@@ -49,14 +75,32 @@
       @current-change="handleCurrentChange"
     />
 
+    <!-- 新增与编辑组件 -->
+    <edit
+      :title="edit.title"
+      :visible="edit.visible"
+      :form-data="edit.formData"
+      :remote-close="remoteClose"
+    />
   </div>
 </template>
 <script>
 
 // 方法2 ：非默认对象 import {getList, XXXXXX } from '@/api/goodsManager'
 import api from '@/api/goodsManager'
+
+import Edit from './edit'
+
+// 条件查询：状态下拉框
+const statusOptions = [
+  { code: 0, name: '禁用' },
+  { code: 1, name: '正常' }
+]
+
 export default {
   name: 'GoodsManager',
+
+  components: { Edit },
 
   // 状态码转名称
   // 1. 定义 statusFilter 过滤器转换样式
@@ -78,7 +122,26 @@ export default {
         current: 1, // 当前页码
         size: 20 // 每页显示20条数据,
       },
-      query: {} // 查询条件
+      query: {}, // 查询条件
+      statusOptions, // 条件查询：状态下拉框
+
+      edit: { // 子组件中引用
+        title: '',
+        visible: false,
+        formData: {}
+      },
+
+      rules: { // 校验规则
+        name: [ // 与 el-form-item 标签的 prop 属性值对应
+          { required: true, message: '请输入分类名称', trigger: 'blur' }
+        ],
+        status: [
+          { required: true, message: '请选择状态', trigger: 'change' }
+        ],
+        sort: [
+          { required: true, message: '请输入排序号', trigger: 'change' }
+        ]
+      }
     }
   },
 
@@ -114,6 +177,33 @@ export default {
     },
     handleDelete(id) {
       console.log('删除', id)
+    },
+
+    // 条件查询
+    queryData() {
+      // 将页码变为第1页
+      this.page.current = 1
+      this.fetchData()
+    },
+
+    // 条件查询：重置 or 刷新当前页面
+    reload() {
+      this.query = {}
+      this.fetchData()
+    },
+
+    // 打开新增窗口
+    openAdd() {
+      this.edit.visible = true
+      this.edit.title = '新增'
+    },
+
+    // 触发关闭弹出的新增修改子组件窗口（因为visiale 在子组件里面）
+    remoteClose() {
+      // 一定要加上这个，不然有时候表单输入不了值
+      this.edit.formData = {}
+      this.edit.visible = false
+      this.fetchData()
     }
 
   }
