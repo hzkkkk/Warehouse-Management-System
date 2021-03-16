@@ -16,6 +16,20 @@ export default {
       url: `/wms/goodsManager/${id}`, // 反单引号 ``
       method: 'get'
     })
+  },
+  // 审核通过
+  auditSuccess(id) {
+    return request({
+      url: `/wms/goodsManager/audit/success/${id}`, // 反单引号 ``
+      method: 'get'
+    })
+  },
+  // 审核不通过
+  auditFail(id) {
+    return request({
+      url: `/wms/goodsManager/audit/fali/${id}`, // 反单引号 ``
+      method: 'get'
+    })
   }
 }
 

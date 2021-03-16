@@ -45,7 +45,11 @@ display:block"
           readonly
         />
       </el-form-item>
-      <el-form-item label="内容:" />
+      <el-form-item label="内容:">
+        <!-- 3. 主体内容 :editable="false" 禁止编辑-->
+        <mavon-editor ref="md" v-model="formData.mdContent" :editable="false" />
+      </el-form-item>
+
       <el-form-item v-if="isAudit" align="center">
         <el-button type="primary" @click="auditSuccess()">审核通过</el-button>
         <el-button type="danger" @click="auditFail()">审核不通过</el-button>
@@ -53,14 +57,18 @@ display:block"
     </el-form>
   </el-dialog>
 </template>
-
 <script>
 
 import api from '@/api/goodsManager'
 import categoryApi from '@/api/categoryManager'
+// 1. 引入 mavon-editor 组件与样式
+import { mavonEditor } from 'mavon-editor'
+import 'mavon-editor/dist/css/index.css'
 
 export default {
-// 接收父组件传递的属性
+  // 2. 注册为子组件
+  components: { mavonEditor },
+  // 接收父组件传递的属性
   props: {
     id: {
       type: Number,
@@ -101,12 +109,7 @@ export default {
       // 因为 visible 是父组件的属性，所以要让父组件去改变值
       this.remoteClose()
     },
-    // 审核通过
-    auditSuccess() {
-    },
-    // 审核不通过
-    auditFail() {
-    },
+
     // 查询文章详情
     getArticleById() {
       // 通过Id查询数据
@@ -119,6 +122,48 @@ export default {
       // es6语法，不要少了 async， await
       categoryApi.getCategoryAndLabel().then(response => {
         this.labelOptions = response.data
+      })
+    },
+    // 审核通过
+    auditSuccess() {
+      this.$confirm('确认审核通过吗？', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(() => {
+        // 确认
+        api.auditSuccess(this.id).then(response => {
+          // 提示信息
+          this.$message({
+            type: 'success',
+            message: '审核通过提交成功'
+          })
+          // 关闭窗口
+          this.remoteClose()
+        })
+      }).catch(() => {
+        // 取消删除，不理会
+      })
+    },
+    // 审核不通过
+    auditFail() {
+      this.$confirm('确认审核不通过吗？', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(() => {
+        // 确认
+        api.auditFail(this.id).then(response => {
+          // 提示信息
+          this.$message({
+            type: 'success',
+            message: '审核不通过提交成功'
+          })
+          // 关闭窗口
+          this.remoteClose()
+        })
+      }).catch(() => {
+        // 取消删除，不理会
       })
     }
   }
