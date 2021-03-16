@@ -38,6 +38,13 @@ export default {
       method: 'put', // put 方式提交
       data
     })
+  },
+  // 删除
+  deleteById(id) {
+    return request({
+      url: `/wms/goodsManager/${id}`, // 反单引号 ``
+      method: 'delete' // delete 方式提交
+    })
   }
 
 }
