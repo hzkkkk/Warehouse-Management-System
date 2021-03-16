@@ -126,8 +126,27 @@ export default {
         }
       })
     },
+
+    // 删除
     handleDelete(id) {
-      console.log('删除', id)
+      this.$confirm('确认删除这条记录吗？', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(() => {
+        // 确认
+        api.deleteById(id).then(response => {
+          // 提示信息
+          this.$message({
+            type: response.code === 20000 ? 'success' : 'error',
+            message: response.message
+          })
+          // 刷新列表
+          this.fetchData()
+        })
+      }).catch(() => {
+        // 取消删除，不理会
+      })
     },
 
     // 当每页显示条数改变后,被触发 , val是最新的每页显示条数

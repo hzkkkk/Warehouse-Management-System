@@ -30,5 +30,12 @@ export default {
       method: 'put', // put 方式提交
       data
     })
+  },
+  deleteById(id) {
+    return request({
+      url: `/wms/providerManager/${id}`, // 反单引号 ``
+      method: 'delete' // delete 方式提交
+    })
   }
+
 }
