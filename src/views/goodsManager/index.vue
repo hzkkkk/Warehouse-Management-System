@@ -63,6 +63,12 @@
 
       <el-table-column align="left" label="操作" width="220">
         <template slot-scope="scope">
+          <!-- ++++ 添加查看 -->
+          <el-button
+            size="mini"
+            type="primary"
+            @click="openView(scope.row.id)"
+          >查看</el-button>
           <el-button
             v-if="scope.row.status === 1"
             size="mini"
@@ -140,6 +146,7 @@ export default {
       this.list = data.records
       this.page.total = data.total
     },
+
     // 格式化日期用
     getFormat(date) {
       return format(date)
@@ -162,17 +169,20 @@ export default {
       this.page.size = val
       this.fetchData()
     },
+
     // 当页码改变后,被触发 , val 是最新的页面
     handleCurrentChange(val) {
       this.page.current = val
       this.fetchData()
     },
+
     // 查询
     queryData() {
       // 将页码变为第1页
       this.page.current = 1
       this.fetchData()
     },
+
     // 重置 or 刷新当前页面
     reload() {
       this.query = {}
@@ -183,6 +193,13 @@ export default {
     remoteClose() {
       this.audit.visible = false
       this.fetchData()
+    },
+
+    openView(id) {
+      this.audit.id = id // 文章id
+      this.audit.isAudit = false // 是详情页面
+      this.audit.title = '文章详情'
+      this.audit.visible = true
     }
   }
 }
