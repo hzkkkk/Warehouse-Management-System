@@ -28,36 +28,35 @@
       style="width: 100%"
     >
       <!-- type="index"获取索引值，从1开始 ，label显示标题，prop 数据字段名，width列宽 -->
-      <el-table-column align="center" type="index" label="序号" width="60"></el-tablecolumn>
-        <el-table-column align="left" prop="name" label="名称" />
-        <el-table-column align="center" prop="url" label="请求地址" />
-        <el-table-column align="center" prop="code" label="权限标识" />
-        <el-table-column align="center" prop="type" label="类型">
-          <template slot-scope="scope">
-            <span v-if="scope.row.type === 1">目录</span>
-            <span v-if="scope.row.type === 2">菜单</span>
-            <span v-if="scope.row.type === 3">按钮</span>
-          </template>
-        </el-table-column>
-        <el-table-column align="center" prop="code" label="图标">
-          <template slot-scope="scope">
-            <i :class="scope.row.icon" />
-          </template>
-        </el-table-column>
-        <el-table-column align="center" prop="sort" label="排序" />
-        <el-table-column align="center" label="操作" width="260">
-          <template slot-scope="scope">
-            <el-button
-              size="mini"
-              type="primary"
-              icon="el-icon-circle-plus-outline"
-              @click="handleAdd(scope.row.id)"
-            >新增</el-button>
-            <el-button size="mini" @click="handleEdit(scope.row.id)">编辑</el-button>
-            <el-button size="mini" type="danger" @click="handleDelete(scope.row.id)">
-              删除</el-button>
-          </template>
-        </el-table-column>
+      <el-table-column align="center" type="index" label="序号" width="60" />
+      <el-table-column align="left" prop="name" label="名称" />
+      <el-table-column align="center" prop="url" label="请求地址" />
+      <el-table-column align="center" prop="code" label="权限标识" />
+      <el-table-column align="center" prop="type" label="类型">
+        <template slot-scope="scope">
+          <span v-if="scope.row.type === 1">目录</span>
+          <span v-if="scope.row.type === 2">菜单</span>
+          <span v-if="scope.row.type === 3">按钮</span>
+        </template>
+      </el-table-column>
+      <el-table-column align="center" prop="code" label="图标">
+        <template slot-scope="scope">
+          <i :class="scope.row.icon" />
+        </template>
+      </el-table-column>
+      <el-table-column align="center" prop="sort" label="排序" />
+      <el-table-column align="center" label="操作" width="260">
+        <template slot-scope="scope">
+          <el-button
+            size="mini"
+            type="primary"
+            icon="el-icon-circle-plus-outline"
+            @click="handleAdd(scope.row.id)"
+          >新增</el-button>
+          <el-button size="mini" @click="handleEdit(scope.row.id)">编辑</el-button>
+          <el-button size="mini" type="danger" @click="handleDelete(scope.row.id)">
+            删除</el-button>
+        </template>
       </el-table-column>
     </el-table>
 

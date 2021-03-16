@@ -62,6 +62,7 @@ import api from '@/api/menu'
 import Edit from './edit'
 
 export default {
+  // eslint-disable-next-line vue/no-unused-components
   components: { Edit },
   // 接收父组件传递的属性
   props: {
@@ -82,6 +83,15 @@ export default {
     // eslint-disable-next-line vue/require-default-prop
     remoteClose: Function // 用于关闭窗口
   },
+  data() {
+    return {
+      rules: { // 校验规则
+        type: [{ required: true, message: '请选择类型', trigger: 'change' }],
+        name: [{ required: true, message: '请输入菜单名称', trigger: 'blur' }],
+        code: [{ required: true, message: '请输入权限标识', trigger: 'blur' }]
+      }
+    }
+  },
   methods: {
     // 关闭弹窗
     handleClose(done) {
@@ -90,17 +100,43 @@ export default {
       // 因为 visible 是父组件的属性，所以要让父组件去改变值
       this.remoteClose()
     },
-    data() {
-      return {
-        rules: { // 校验规则
-          type: [{ required: true, message: '请选择类型', trigger: 'change' }],
-          name: [{ required: true, message: '请输入菜单名称', trigger: 'blur' }],
-          code: [{ required: true, message: '请输入权限标识', trigger: 'blur' }]
-        }
-      }
-    },
-    // 提交表单
+
+    // 2. 提交表单
     submitForm(formName) {
+      this.$refs[formName].validate((valid) => {
+        if (valid) {
+          // 校验通过，判断下选择的类型，把对应不需要的把它清空
+          // eslint-disable-next-line eqeqeq
+          if (this.formData.type == 3) { // 按钮
+            this.formData.url = '' // 请求地址url
+            this.formData.icon = '' // 图标
+          } // 校验通过，提交数据
+          this.submitData()
+        } else {
+          // 验证不通过
+          return false
+        }
+      })
+    },
+
+    // 3. 异步方法提交数据
+    async submitData() {
+      const response = await api.add(this.formData)
+      // 等上面返回数据response后再进行处理
+      if (response.code === 20000) {
+        // 提交成功, 关闭窗口, 刷新列表
+        this.$message({
+          message: '保存成功',
+          type: 'success'
+        })
+        // 关闭窗口
+        this.handleClose()
+      } else {
+        this.$message({
+          type: 'error',
+          message: '保存失败'
+        })
+      }
     }
   }
 }

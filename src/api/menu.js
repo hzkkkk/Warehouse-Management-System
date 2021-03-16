@@ -8,5 +8,12 @@ export default {
       method: 'post',
       data: query
     })
+  },
+  add(data) {
+    return request({
+      url: `/system/menu`,
+      method: 'post',
+      data
+    })
   }
 }
