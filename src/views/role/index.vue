@@ -22,21 +22,20 @@
     <!-- 数据列表 :data 绑定渲染的数据, border 纵向边框 -->
     <el-table :data="list" border highlight-current-row style="width: 100%">
       <!-- type="index"获取索引值，从1开始 ，label显示标题，prop 数据字段名，width列宽 -->
-      <el-table-column align="center" type="index" label="序号" width="60"></el-tablecolumn>
-        <el-table-column align="center" prop="name" label="角色名称" />
-        <el-table-column align="center" prop="remark" label="备注" />
-        <el-table-column align="center" label="操作">
-          <template slot-scope="scope">
-            <el-button
-              size="mini"
-              type="success"
-              @click="handlePermission(scope.row.id)"
-            >分配权限</el-button>
-            <el-button size="mini" @click="handleEdit(scope.row.id)">编辑</el-button>
-            <el-button size="mini" type="danger" @click="handleDelete(scope.row.id)">
-              删除</el-button>
-          </template>
-        </el-table-column>
+      <el-table-column align="center" type="index" label="序号" width="60" />
+      <el-table-column align="center" prop="name" label="角色名称" />
+      <el-table-column align="center" prop="remark" label="备注" />
+      <el-table-column align="center" label="操作">
+        <template slot-scope="scope">
+          <el-button
+            size="mini"
+            type="success"
+            @click="handlePermission(scope.row.id)"
+          >分配权限</el-button>
+          <el-button size="mini" @click="handleEdit(scope.row.id)">编辑</el-button>
+          <el-button size="mini" type="danger" @click="handleDelete(scope.row.id)">
+            删除</el-button>
+        </template>
       </el-table-column>
     </el-table>
 
@@ -51,13 +50,24 @@
       @current-change="handleCurrentChange"
     />
 
+    <!-- 新增与编辑组件 -->
+    <edit
+      :title="edit.title"
+      :visible="edit.visible"
+      :form-data="edit.formData"
+      :remote-close="remoteClose"
+    />
+
   </div>
 </template>
 
 <script>
 import api from '@/api/role'
+import Edit from './edit'
 
 export default {
+  components: { Edit },
+
   data() {
     return {
       list: [], // 列表数据
@@ -66,7 +76,12 @@ export default {
         current: 1, // 当前页码
         size: 20 // 每页显示20条数据
       },
-      query: {} // 查询条件
+      query: {}, // 查询条件
+      edit: { // 子组件中引用
+        title: '',
+        visible: false,
+        formData: {}
+      }
     }
   },
   created() {
@@ -83,9 +98,20 @@ export default {
     handlePermission(id) {
       console.log('分配权限', id)
     },
+
     handleEdit(id) {
-      console.log('编辑', id)
+      // 通过Id查询数据
+      api.getById(id).then(response => {
+        if (response.code === 20000) {
+          this.edit.formData = response.data
+        }
+        // 弹出窗口
+        this.edit.title = '编辑'
+        // 弹出窗口
+        this.edit.visible = true
+      })
     },
+
     handleDelete(id) {
       console.log('删除', id)
     },
@@ -113,9 +139,20 @@ export default {
       this.query = {}
       this.fetchData()
     },
-    // 新增方法
+
+    // 打开新增窗口
     handleAdd() {
+      this.edit.visible = true
+      this.edit.title = '新增'
+    },
+
+    // 触发关闭弹出的新增修改子组件窗口
+    remoteClose() {
+      this.edit.formData = {}
+      this.edit.visible = false
+      this.fetchData()
     }
+
   }
 }
 </script>
