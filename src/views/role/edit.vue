@@ -1,35 +1,28 @@
 <template>
-  <!--弹窗-->
   <el-dialog
     :title="title"
     :visible.sync="visible"
-    :before-close="handleClose"
     width="500px"
+    :before-close="handleClose"
   >
     <el-form
       ref="formData"
       :rules="rules"
       :model="formData"
       label-width="100px"
-      style="width: 400px;"
+      label-position="right"
+      style="width: 400px"
       status-icon
     >
-      <el-form-item label="名称：" prop="name">
+      <el-form-item label="角色名称：" prop="name">
         <el-input v-model="formData.name" />
       </el-form-item>
       <el-form-item label="备注：" prop="remark">
-        <el-input
-          v-model="formData.remark"
-          type="textarea"
-          :autosize="{ minRows:
-            2, maxRows: 4}"
-          placeholder="请输入内容"
-        />
+        <el-input v-model="formData.remark" type="textarea" />
       </el-form-item>
-      <el-form-item align="right">
-        <el-button size="mini" @click="handleClose">取 消</el-button>
-        <el-button size="mini" type="primary" @click="submitForm('formData')">确 定
-        </el-button>
+      <el-form-item>
+        <el-button type="primary" size="mini" @click="submitForm('formData')">确定</el-button>
+        <el-button size="mini" @click="handleClose">取消</el-button>
       </el-form-item>
     </el-form>
   </el-dialog>
@@ -40,67 +33,73 @@
 import api from '@/api/role'
 
 export default {
-// 接收父组件传递的属性
   props: {
-    visible: { // 弹出隐藏
-      type: Boolean,
-      default: false
-    },
-    title: { // 标题
+    title: { // 弹窗的标题
       type: String,
       default: ''
     },
-    formData: { // 表单数据
+    visible: { // 弹出窗口，true弹出
+      type: Boolean,
+      default: false
+    },
+    formData: { // 提交表单数据
       type: Object,
       // eslint-disable-next-line vue/require-valid-default-prop
       default: {}
     },
+
     // eslint-disable-next-line vue/require-default-prop
     remoteClose: Function // 用于关闭窗口
   },
-  rules: { // 校验规则
-    name: [{ required: true, message: '请输入菜单名称', trigger: 'blur' }]
-  },
-  methods: {
-    // 关闭弹窗
-    handleClose(done) {
-      // 表单清空
-      this.$refs['formData'].resetFields()
-      // 因为 visible 是父组件的属性，所以要让父组件去改变值
-      this.remoteClose()
-    },
 
-    // 2. 提交表单
+  data() {
+    return {
+      rules: {
+        name: [ // prop值
+          { required: true, message: '请输入角色名称', trigger: 'blur' }
+        ]
+      }
+    }
+  },
+
+  methods: {
+    // 提交表单数据
     submitForm(formName) {
       this.$refs[formName].validate((valid) => {
         if (valid) {
-          // 校验通过，提交数据
+          // 校验通过，提交表单数据
           this.submitData()
         } else {
-          // 验证不通过
+          // console.log('error submit!!');
           return false
         }
       })
     },
 
-    // 3. 异步方法提交数据
     async submitData() {
-      const response = await api.add(this.formData)
-      // 等上面返回数据response后再进行处理
+      let response = null
+
+      if (this.formData.id) {
+        // 编辑
+        response = await api.update(this.formData)
+      } else {
+        // 新增
+        response = await api.add(this.formData)
+      }
+
       if (response.code === 20000) {
-        // 提交成功, 关闭窗口, 刷新列表
-        this.$message({
-          message: '保存成功',
-          type: 'success'
-        })
+        //   提示信息
+        this.$message({ message: '保存成功', type: 'success' })
         // 关闭窗口
         this.handleClose()
       } else {
-        this.$message({
-          type: 'error',
-          message: '保存失败'
-        })
+        this.$message({ message: '保存失败', type: 'error' })
       }
+    },
+
+    handleClose() {
+      this.$refs['formData'].resetFields()
+      this.remoteClose()
     }
   }
 }
