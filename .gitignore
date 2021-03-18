@@ -11,6 +11,7 @@ tests/**/coverage/
 
 # Editor directories and files
 .idea
+.github
 .vscode
 *.suo
 *.ntvs*
