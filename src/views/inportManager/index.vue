@@ -1,6 +1,6 @@
 <template>
   <div>
-    入库管理
+    归还记录管理
   </div>
 </template>
 

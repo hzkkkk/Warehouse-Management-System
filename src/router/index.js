@@ -89,13 +89,13 @@ export const constantRoutes = [
         path: 'outportManager',
         name: 'OutportManager',
         component: () => import('@/views/outportManager/index'),
-        meta: { title: '物资出库', icon: 'el-icon-caret-top' }
+        meta: { title: '物资借出记录', icon: 'el-icon-caret-top' }
       },
       {
         path: 'inportManager',
         name: 'InportManager',
         component: () => import('@/views/inportManager/index'),
-        meta: { title: '物资入库', icon: 'el-icon-caret-bottom' }
+        meta: { title: '物资归还记录', icon: 'el-icon-caret-bottom' }
       }
     ]
   },

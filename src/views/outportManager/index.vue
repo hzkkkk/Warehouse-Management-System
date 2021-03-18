@@ -1,6 +1,6 @@
 <template>
   <div>
-    出库管理
+    借出记录管理
   </div>
 </template>
 

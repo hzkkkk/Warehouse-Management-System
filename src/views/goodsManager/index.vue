@@ -47,9 +47,9 @@
 
       <el-table-column align="center" prop="status" label="状态">
         <template slot-scope="scope">
-          <el-tag v-if="scope.row.status === 1">未审核</el-tag>
-          <el-tag v-if="scope.row.status === 2" type="success">审核通过</el-tag>
-          <el-tag v-if="scope.row.status === 3" type="warning">审核未通过</el-tag>
+          <el-tag v-if="scope.row.status === 1">已借出</el-tag>
+          <el-tag v-if="scope.row.status === 2" type="success">可借出</el-tag>
+          <el-tag v-if="scope.row.status === 3" type="warning">已损坏</el-tag>
           <el-tag v-if="scope.row.status === 0" type="danger">已删除</el-tag>
         </template>
       </el-table-column>
