@@ -1,5 +1,5 @@
 {
-  "name": "warehouse-management-system",
+  "name": "erp-wms-admin",
   "version": "1.0.1",
   "description": "A warehouse-management-system for university",
   "author": "BUG-Hunter <BUG-Hunter.site>",
@@ -16,6 +16,7 @@
   "dependencies": {
     "axios": "0.18.1",
     "core-js": "3.6.5",
+    "echarts": "^5.0.2",
     "element-ui": "2.13.2",
     "js-cookie": "2.2.0",
     "mavon-editor": "^2.9.1",
