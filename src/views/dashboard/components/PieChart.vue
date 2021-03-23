@@ -7,8 +7,12 @@
 // import echarts from 'echarts'
 import * as echarts from 'echarts'
 require('echarts/theme/macarons') // 主题
+// 自适应组件
+import resize from './mixins/resize'
 
 export default {
+  mixins: [resize],
+
   props: {
     className: {
       type: String,
