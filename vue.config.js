@@ -47,7 +47,8 @@ module.exports = {
     proxy: {
       // 例子 /wms/goodsManager/search 转发后会变成 :8001 /goodsManager/search
       // 相当于说一个后缀对应一个微服务（新 ip）
-      [process.env.VUE_APP_BASE_API + '/wms']: { // 是.env.development 文件的'/dev-api':
+      // [process.env.VUE_APP_BASE_API + '/wms']
+      [process.env.VUE_APP_BASE_API]: { // 是.env.development 文件的'/dev-api':
         // 目标服务器地址
         // 选择一：Mock 测试篇
         target: 'https://mock.mengxuegu.com/mock/604b23bff340b05bceda3fc5/wms-admin',
