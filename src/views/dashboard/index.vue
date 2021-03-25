@@ -12,6 +12,8 @@
       <el-col :xs="24" :sm="24" :lg="12">
         <el-card>
           <!-- 饼状图： 各技术频道文章统计 -->
+          <!-- v-if="flag" 获取数据之后才能渲染出来，
+          不然不会得到新的数据 -->
           <pie-chart
             v-if="flag"
             :legend-data="categoryTotal.nameList"
