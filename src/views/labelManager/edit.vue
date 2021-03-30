@@ -40,7 +40,7 @@
 
 <script>
 // 1. 导航 api
-import api from '@/api/providerManager'
+import api from '@/api/labelManager'
 
 export default {
 // 接收父组件传递的属性

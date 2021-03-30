@@ -3,7 +3,7 @@
 
     <!-- 条件查询 -->
     <el-form :inline="true" size="mini">
-      <el-form-item label="文章标题:">
+      <el-form-item label="物资名称:">
         <el-input v-model.trim="query.title" />
       </el-form-item>
       <el-form-item label="状态:">
@@ -11,9 +11,9 @@
         <el-select v-model="query.status" clearable filterable style="width: 100px">
           <!-- :value="1" 是数字1，value="1"是字符串“1”
 0: 已删除, 1:未审核，2:审核通过，3：审核未通过-->
-          <el-option :value="1" label="未审核" />
-          <el-option :value="2" label="审核通过" />
-          <el-option :value="3" label="审核未通过" />
+          <el-option :value="1" label="已借出" />
+          <el-option :value="2" label="可借出" />
+          <el-option :value="3" label="已损坏" />
           <el-option :value="0" label="已删除" />
         </el-select>
       </el-form-item>
@@ -31,11 +31,11 @@
       highlight-current-row
       style="width: 100%"
     >
-      <!-- type="index"获取索引值，从1开始 ，label显示标题，prop 数据字段名，width列宽 -->
+      <!-- type="index"获取索引值，从1开始 ，label显示名称，prop 数据字段名，width列宽 -->
       <el-table-column align="center" type="index" label="序号" width="60" />
-      <el-table-column align="center" prop="title" label="文章标题" />
-      <el-table-column align="center" prop="viewCount" label="浏览量" />
-      <el-table-column align="center" prop="thumhup" label="点赞数" />
+      <el-table-column align="center" prop="title" label="物资名称" />
+      <el-table-column align="center" prop="providerName" label="所在仓库名称" />
+      <el-table-column align="center" prop="num" label="数量" />
 
       <!-- 渲染 el-tag -->
       <el-table-column align="center" prop="ispublic" label="是否公开">
@@ -126,7 +126,7 @@ export default {
         size: 20 // 每页显示20条数据,
       },
       audit: { // 子组件中引用
-        id: null, // 文章id
+        id: null, // 物资id
         isAudit: true, // true 审核，false 详情
         visible: false,
         title: ''
@@ -139,7 +139,7 @@ export default {
     this.fetchData()
   },
   methods: {
-    // 分页条件查询文章列表
+    // 分页条件查询物资列表
     // fetchData 的第二种写法
     async fetchData() {
       const { data } = await api.getList(this.query, this.page.current, this.page.size)
@@ -154,9 +154,9 @@ export default {
 
     // 打开审核窗口
     openAudit(id) {
-      this.audit.id = id // 文章id
+      this.audit.id = id // 物资id
       this.audit.isAudit = true // 是审核页面
-      this.audit.title = '审核文章'
+      this.audit.title = '审核物资'
       this.audit.visible = true
     },
 
@@ -213,9 +213,9 @@ export default {
     },
 
     openView(id) {
-      this.audit.id = id // 文章id
+      this.audit.id = id // 物资id
       this.audit.isAudit = false // 是详情页面
-      this.audit.title = '文章详情'
+      this.audit.title = '物资详情'
       this.audit.visible = true
     }
   }

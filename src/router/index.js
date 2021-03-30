@@ -80,10 +80,10 @@ export const constantRoutes = [
         meta: { title: '物资详情管理', icon: 'el-icon-s-order' }
       },
       {
-        path: 'providerManager',
-        name: 'ProviderManager',
-        component: () => import('@/views/providerManager/index'),
-        meta: { title: '物资供应商管理', icon: 'el-icon-s-shop' }
+        path: 'labelManager',
+        name: 'LabelManager',
+        component: () => import('@/views/labelManager/index'),
+        meta: { title: '物资标签管理', icon: 'el-icon-collection-tag' }
       },
       {
         path: 'outportManager',
@@ -110,6 +110,20 @@ export const constantRoutes = [
         name: 'WarehouseManager',
         component: () => import('@/views/warehouseManager/index'),
         meta: { title: '仓库管理', icon: 'el-icon-s-home' }
+      }
+    ]
+  },
+
+  // 供应商管理
+  {
+    path: '/providerManager',
+    component: Layout,
+    children: [
+      {
+        path: 'providerManager',
+        name: 'ProviderManager',
+        component: () => import('@/views/providerManager/index'),
+        meta: { title: '物资供应商管理', icon: 'el-icon-s-shop' }
       }
     ]
   },
