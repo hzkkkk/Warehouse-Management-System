@@ -1,7 +1,9 @@
 import axios from 'axios'
 import { MessageBox, Message } from 'element-ui'
 import store from '@/store'
-import { getToken } from '@/utils/auth'
+// import { getToken } from '@/utils/auth'
+// +++++++++++++++++++
+import { PcCookie, Key } from '@/utils/cookie' // 对 cookie 操作
 
 // axios : 发送请求用
 // 自己实例化一个 service(便于自定义后缀什么的), 使用了 axios 来发送请求
@@ -13,16 +15,28 @@ const service = axios.create({
 })
 
 // request interceptor
+// 前端请求后端接口用
 service.interceptors.request.use(
   config => {
     // do something before request is sent
 
-    if (store.getters.token) {
-      // let each request carry token
-      // ['X-Token'] is a custom headers key
-      // please modify it according to the actual situation
-      config.headers['X-Token'] = getToken()
+    // 方法 1 ：没有权限管理，直接放行
+    // if (store.getters.token) {
+    //   // let each request carry token
+    //   // ['X-Token'] is a custom headers key
+    //   // please modify it according to the actual situation
+    //   config.headers['X-Token'] = getToken()
+    // }
+
+    // 方法 2 : 从 cookies 获取 token
+    // ++++++++++ start
+    const accessTokenKey = PcCookie.get(Key.accessTokenKey)
+    if (accessTokenKey) {
+      // 针对每个请求，请求头带上令牌 Authorization: Bearer token
+      config.headers.Authorization = `Bearer ${accessTokenKey}`
     }
+    // ++++++++++ end
+
     return config
   },
   error => {

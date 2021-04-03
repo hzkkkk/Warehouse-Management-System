@@ -54,6 +54,8 @@ module.exports = {
         target: 'https://mock.mengxuegu.com/mock/604b23bff340b05bceda3fc5/wms-admin',
         // 选择二：本地服务器篇
         // target: 'http://127.0.0.1:8001',
+        // 选择三：阿里云远程服务器篇(单纯用 idea 运行，外网联不通)
+        // target: 'http://114.55.28.149:8001',
 
         changeOrigin: true, // 开启代理
         //  将 /dev-api/wms/goodsManager/search 中的 /dev-api' 替换为 ''
