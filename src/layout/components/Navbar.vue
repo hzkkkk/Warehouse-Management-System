@@ -25,7 +25,7 @@
             <el-dropdown-item>Docs</el-dropdown-item>
           </a>
           <el-dropdown-item divided @click.native="logout">
-            <span style="display:block;">Log Out</span>
+            <span style="display:block;">退出</span>
           </el-dropdown-item>
         </el-dropdown-menu>
       </el-dropdown>
@@ -38,6 +38,9 @@ import { mapGetters } from 'vuex'
 import Breadcrumb from '@/components/Breadcrumb'
 import Hamburger from '@/components/Hamburger'
 
+// ++ 1. 导入 cookie.js 获取认证信息 ++
+import { PcCookie, Key } from '@/utils/cookie'
+
 export default {
   components: {
     Breadcrumb,
@@ -47,15 +50,23 @@ export default {
     ...mapGetters([
       'sidebar',
       'avatar'
-    ])
+    ]),
+
+    // 3. 添加
+    avatar() {
+      return PcCookie.get(Key.userInfoKey)
+        ? JSON.parse(PcCookie.get(Key.userInfoKey)).imageUrl : ''
+    }
   },
   methods: {
     toggleSideBar() {
       this.$store.dispatch('app/toggleSideBar')
     },
     async logout() {
-      await this.$store.dispatch('user/logout')
-      this.$router.push(`/login?redirect=${this.$route.fullPath}`)
+      // await this.$store.dispatch('user/logout')
+      // this.$router.push(`/login?redirect=${this.$route.fullPath}`)
+      window.location.href =
+`${process.env.VUE_APP_AUTH_CENTER_URL}/logout?redirectURL=${window.location.href}`
     }
   }
 }
