@@ -87,14 +87,32 @@ service.interceptors.response.use(
       return res
     }
   },
+  // +++++++
   error => {
-    console.log('err' + error) // for debug
-    Message({
-      message: error.message,
-      type: 'error',
-      duration: 5 * 1000
-    })
-    return Promise.reject(error)
+  // 非401未认证，直接放行
+    if (error.response && error.response.status !== 404) {
+      Message({
+        message: error.message,
+        type: 'error',
+        duration: 5 * 1000
+      })
+      return Promise.reject(error)
+    }
+    // 401 发送刷新令牌请求
+    // 锁， 防止并发重复请求, true 还未请求，false 正在请求刷新
+    let isLock = true
+    if (isLock && PcCookie.get(Key.refreshTokenKey)) {
+      // 有刷新令牌，防止并发重复请求刷新，
+      isLock = false
+      // 通过刷新令牌获取新令牌，
+      window.location.href =
+  `${process.env.VUE_APP_AUTH_CENTER_URL}/refresh?redirectURL=${window.location.href}`
+    } else {
+      // 没有刷新令牌，则跳转认证客户端
+      window.location.href =
+  `${process.env.VUE_APP_AUTH_CENTER_URL}?redirectURL=${window.location.href}`
+    }
+    return Promise.reject('令牌过期，重新认证')
   }
 )
 
