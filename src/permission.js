@@ -5,6 +5,7 @@ import 'nprogress/nprogress.css' // progress bar style
 
 import getPageTitle from '@/utils/get-page-title'
 
+import store from './store'
 // 原例：import store from './store'
 // 原例：import { getToken } from '@/utils/auth' // get token from cookie
 // 原例：import { Message } from 'element-ui'
@@ -12,6 +13,7 @@ import getPageTitle from '@/utils/get-page-title'
 // 路由拦截器获取认证信息
 // ++ 1. 导入 cookie.js 获取认证信息 ++
 import { PcCookie, Key } from '@/utils/cookie'
+import { Message } from 'element-ui'
 
 NProgress.configure({ showSpinner: false }) // NProgress Configuration
 
@@ -28,7 +30,6 @@ const whiteList = ['/login'] // no redirect whitelist
 router.beforeEach(async(to, from, next) => {
   // start progress bar，进度条
   NProgress.start()
-
   // set page title
   document.title = getPageTitle(to.meta.title)
 
@@ -42,6 +43,7 @@ router.beforeEach(async(to, from, next) => {
   if (hasToken) {
     // 有 token
     if (to.path === '/login') {
+      console.log('已经登录')
       // 已经登录了
       //    router/index.js 里面
       //  path: '/' 就是首页，重定向到/dashboard
@@ -53,9 +55,26 @@ router.beforeEach(async(to, from, next) => {
       const hasGetUserInfo = PcCookie.get(Key.accessTokenKey)
       // 原例：const hasGetUserInfo = store.getters.name
       if (hasGetUserInfo) {
-        // 如果有
-        next()
+        // // 如果有,不加权限管理的话，直接转发
+        // next()
+
+        // console.log('检测到有用户信息 token')
+        // 是否已经初始化过权限菜单 ++++
+        if (store.getters.init === false) {
+          // console.log('正在获取用户拥有的权限菜单')
+          // 获取用户拥有的权限菜单 ，调用 store/modules/menu.js 的 GetUserMenu
+          store.dispatch('menu/GetUserMenu').then(() => {
+            // replace: true:继承访问目标路由且不会留下history记录
+            next({ ...to, replace: true })
+          // eslint-disable-next-line handle-callback-err
+          }).catch((error) => {
+            Message({ message: '获取用户权限信息失败', type: 'error' })
+          })
+        } else {
+          next() // 继承访问目标路由
+        } // ++++
       } else {
+        console.log('跳转认证客户端')
         // 如果没有则跳转认证客户端
         window.location.href =
         `${process.env.VUE_APP_AUTH_CENTER_URL}?redirectURL=${window.location.href}`

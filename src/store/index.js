@@ -8,6 +8,8 @@ import user from './modules/user'
 // 9: @/store/index.vue 导入 到父组件
 import tagsView from './modules/tagsView'
 
+import menu from './modules/menu'
+
 Vue.use(Vuex)
 
 const store = new Vuex.Store({
@@ -17,7 +19,8 @@ const store = new Vuex.Store({
     user,
     // 添加标签导航栏
     // 9: @/store/index.vue 导入 到父组件
-    tagsView
+    tagsView,
+    menu
   },
   getters
 })

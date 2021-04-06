@@ -91,3 +91,11 @@ export function updatePassword(data) {
     data
   })
 }
+
+// 查询登录用户拥有的权限菜单树
+export function getUserMenuList(userId) {
+  return request({
+    url: `/system/menu/user/${userId}`,
+    method: 'get'
+  })
+}

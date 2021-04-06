@@ -1,6 +1,8 @@
 <template>
   <div class="dashboard-container">
-
+    <!-- <div>
+      菜单权限: {{ $store.getters.menuList }} <br>
+    </div> -->
     <!-- 面板统计组件 -->
     <PanelGroup
       :user-total="userTotal"
