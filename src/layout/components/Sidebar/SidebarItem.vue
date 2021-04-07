@@ -1,16 +1,52 @@
 <template>
-  <div v-if="!item.hidden">
-    <template v-if="hasOneShowingChild(item.children,item) && (!onlyOneChild.children||onlyOneChild.noShowingChildren)&&!item.alwaysShow">
-      <app-link v-if="onlyOneChild.meta" :to="resolvePath(onlyOneChild.path)">
-        <el-menu-item :index="resolvePath(onlyOneChild.path)" :class="{'submenu-title-noDropdown':!isNest}">
-          <!-- 脚手架自动根据配置生成左侧菜单的链路 -->
-          <!-- 4:将数据渲染出来到 SidebarItem 侧边栏 -->
-          <item :icon="onlyOneChild.meta.icon||(item.meta&&item.meta.icon)" :title="onlyOneChild.meta.title" />
+  <!-- <div v-if="!item.hidden"> -->
+  <div>
+    <!-- 没有子菜单，即只有一级菜单，item 每个菜单对象 -->
+    <template v-if=" !item.children || item.children.length === 0 ">
+      <!-- :to="item.url" 请求路径, -->
+      <app-link :to="item.url">
+        <!-- index 唯一标识，class 样式 class="submenu-title-noDropdown"
+:class="{'submenu-title-noDropdown':!isNest}" -->
+        <el-menu-item
+          :index="item.url"
+          :class="{'submenu-title-noDropdown':!isNest}"
+        >
+          <!-- 引用了当前目录下的 item.vue 组件
+icon菜单图标，title菜单名称 -->
+          <item :icon="item.icon" :title="item.name" />
         </el-menu-item>
       </app-link>
     </template>
 
-    <el-submenu v-else ref="subMenu" :index="resolvePath(item.path)" popper-append-to-body>
+    <!-- 有子菜单, index 请求地址 -->
+    <el-submenu v-else :index="item.id">
+      <!-- slot=”title"标识它下面是一级菜单名称 -->
+      <template slot="title">
+        <item :icon="item.icon" :title="item.name" />
+      </template>
+      <!-- 子菜单，再次引用自身组件, is-nest 显示箭头 V -->
+      <sidebar-item
+        v-for="child in item.children"
+        :key="child.id"
+        :item="child"
+        :is-nest="true"
+        class="nest-menu"
+      />
+    </el-submenu>
+
+    <!--  route 方式：一级菜单 -->
+    <!-- <template v-if="hasOneShowingChild(item.children,item) && (!onlyOneChild.children||onlyOneChild.noShowingChildren)&&!item.alwaysShow">
+      <app-link v-if="onlyOneChild.meta" :to="resolvePath(onlyOneChild.path)">
+        <el-menu-item :index="resolvePath(onlyOneChild.path)" :class="{'submenu-title-noDropdown':!isNest}"> -->
+    <!-- 脚手架自动根据配置生成左侧菜单的链路 -->
+    <!--  4:将数据渲染出来到 SidebarItem 侧边栏 -->
+    <!-- <item :icon="onlyOneChild.meta.icon||(item.meta&&item.meta.icon)" :title="onlyOneChild.meta.title" />
+    </el-menu-item>
+    </app-link>
+  </div>
+</template>  -->
+    <!-- route 方式：子菜单 -->
+    <!-- <el-submenu v-else ref="subMenu" :index="resolvePath(item.path)" popper-append-to-body>
       <template slot="title">
         <item v-if="item.meta" :icon="item.meta && item.meta.icon" :title="item.meta.title" />
       </template>
@@ -22,7 +58,8 @@
         :base-path="resolvePath(child.path)"
         class="nest-menu"
       />
-    </el-submenu>
+    </el-submenu> -->
+
   </div>
 </template>
 
